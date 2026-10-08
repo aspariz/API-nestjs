@@ -1,30 +1,31 @@
-import { Controller, Get, Post, Put, Delete, Param} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { get } from 'http';
+import { BooksService } from './books.service.js';
+import { Book } from './entities/book-entity.js';
+import { CreateBookDto} from './dto/create-books-dto.js';
 
-@Controller('books') //decorator to define the route for this controller
+@Controller('books')
 export class BooksController {
 
-    //get
-@Get()
-getBooks(): string {
-    return 'This action returns all books';
-  }
+    constructor(private readonly booksService: BooksService) { }
 
-  //simmpan data
+    @Get()
+    findAll() {
+        return this.booksService.findAll();
+    }
 
-@Post()
-createBook(): string {
-    return 'This action adds a new book';
-  }  
+    @Post()
+    simpanData(@Body() createBookDto: CreateBookDto) {
+        return this.booksService.simpanData(createBookDto);
+    }
 
-  //update data
-@Put(':id')
-  updateBook(@Param('id') id: string): string {
-    return 'This action updates a book';
-  }
-    //delete data
+    @Put(':id')
+    updateData(@Param('id') id: string, @Body() updateBookDto: CreateBookDto) {
+        return this.booksService.updateData(Number(id), updateBookDto);
+    }
 
- @Delete(':id')
-  deleteBook(@Param('id') id: string): string {
-    return 'This action deletes a book';
-  }
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.booksService.remove(Number(id));
+    }
 }
